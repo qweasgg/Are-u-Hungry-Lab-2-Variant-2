@@ -1,4 +1,4 @@
-class Foo(object):
+class DynamicArray(object):
     def hello(self):
         return "hello"
 
