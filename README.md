@@ -23,6 +23,9 @@
 
 ## Changelog
 
+- 21.04.2024 - 1
+  Write the source code for implementation
+
 - 20.04.2024 - 0
   Initialize and write README
   Set black . to complete code formatting
