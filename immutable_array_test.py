@@ -1,7 +1,7 @@
 import unittest
 from hypothesis import given,  strategies
 
-from dynamic_array2 import DynamicArray, cons
+from immutable_array import DynamicArray, cons
 
 
 class TestDynamicArray(unittest.TestCase):
