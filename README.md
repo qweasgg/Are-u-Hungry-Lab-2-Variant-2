@@ -23,6 +23,11 @@
 
 ## Changelog
 
+- 21.04.2024 - 2
+  Write the PBT test for all features
+  Modify some features implement
+  Reformat the whole code
+
 - 21.04.2024 - 1
   Write the source code for implementation
 
