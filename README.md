@@ -24,6 +24,9 @@
 
 ## Changelog
 
+- 25.04.2024 - 3
+  Modify some features implement
+
 - 21.04.2024 - 2
   Write the PBT test for all features
   Modify some features implement

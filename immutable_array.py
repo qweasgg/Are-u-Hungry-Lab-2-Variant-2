@@ -58,26 +58,22 @@ class DynamicArray(object):
         self.length += 1
 
 
-def cons(dynamic_array: DynamicArray, value):
+def cons(value, dynamic_array: DynamicArray):
     cons_array = DynamicArray()
+    cons_array.append(value)
     for item in dynamic_array:
         cons_array.append(item)
-    cons_array.append(value)
     return cons_array
 
 
 def remove(dynamic_array: DynamicArray, value):
-    removed_array = DynamicArray()
-    index = -1
-    for i in range(dynamic_array.length):
-        if dynamic_array.data[i] == value:
-            index = i
-        else:
-            removed_array.append(dynamic_array.data[i])
-    if index >= 0:
-        return removed_array
-    else:
-        return ValueError("Value not found")
+    if dynamic_array.length == 0:
+        return DynamicArray()
+    lst = to_list(dynamic_array)
+    v = lst.pop(0)
+    if v == value:
+        return remove(from_list(lst), value)
+    return cons(v, remove(from_list(lst), value))
 
 
 def size(dynamic_array: DynamicArray):
@@ -85,72 +81,108 @@ def size(dynamic_array: DynamicArray):
 
 
 def is_member(dynamic_array: DynamicArray, value):
-    for i in range(dynamic_array.length):
-        if dynamic_array.data[i] == value:
-            return i
-    return -1
+    if size(dynamic_array) == 0:
+        return False
+    lst = to_list(dynamic_array)
+    v = lst.pop(0)
+    if v == value:
+        return True
+    return is_member(from_list(lst), value)
 
 
 def reverse(dynamic_array: DynamicArray):
-    reserved_array = DynamicArray()
-    size = dynamic_array.length
-    for i in range(dynamic_array.length):
-        reserved_array.append(dynamic_array.data[size - i - 1])
-    return reserved_array
+    if size(dynamic_array) == 0:
+        return DynamicArray()
+    lst = to_list(dynamic_array)
+    v = lst[len(lst) - 1]
+    return cons(v, reverse(from_list(lst[0 : (len(lst) - 1)])))
 
 
 def intersection(instance1: DynamicArray, instance2: DynamicArray):
-    intersected_array = DynamicArray()
-    for item in instance1:
-        if item in instance2 and item not in intersected_array:
-            intersected_array.append(item)
-    return intersected_array
+    if size(instance1) == 0 or size(instance2) == 0:
+        return False
+    lst = to_list(instance1)
+    v = lst.pop(0)
+    if v in instance2.data:
+        return True
+    return intersection(from_list(lst), instance2)
 
 
 def to_list(dynamic_array: DynamicArray):
-    return [item for item in dynamic_array]
+    res: list[type] = []
+
+    def builder(array):
+        if size(array) == 0:
+            return res
+        v = array.data[0]
+        rest_arr = from_list(array.data[1 : size(array)])
+        res.append(v)
+        return builder(rest_arr)
+
+    return builder(dynamic_array)
 
 
-def from_list(lst):
-    dynamic_array = DynamicArray()
-    for item in lst:
-        dynamic_array.append(item)
-    return dynamic_array
+def from_list(lst: list):
+    if len(lst) == 0:
+        return DynamicArray()
+    return cons(lst[0], from_list(lst[1:]))
 
 
 def find(dynamic_array: DynamicArray, predicate):
-    for item in dynamic_array:
-        if predicate(item):
-            return item
-    return None
+    if size(dynamic_array) == 0:
+        return None
+    lst = to_list(dynamic_array)
+    v = lst.pop(0)
+    if predicate(v):
+        return v
+    return find(from_list(lst), predicate)
 
 
-def filter(dynamic_array: DynamicArray, filter):
-    filter_array = DynamicArray()
-    for item in dynamic_array:
-        if filter(item):
-            filter_array.append(item)
-    return filter_array
+def filter(dynamic_array: DynamicArray, func):
+    if size(dynamic_array) == 0:
+        return DynamicArray()
+    lst = to_list(dynamic_array)
+    v = lst.pop(0)
+    if func(v):
+        return cons(v, filter(from_list(lst), func))
+    return filter(from_list(lst), func)
 
 
-def map(dynamic_array: DynamicArray, function):
-    map_array = DynamicArray()
-    for item in dynamic_array:
-        map_array.append(function(item))
-    return map_array
+def map(dynamic_array: DynamicArray, func):
+    if size(dynamic_array) == 0:
+        return DynamicArray()
+    lst = to_list(dynamic_array)
+    v = lst.pop(0)
+    return cons(func(v), map(from_list(lst), func))
 
 
-def reduce(dynamic_array: DynamicArray, function):
-    value = dynamic_array.data[0]
-    for i in range(dynamic_array.length):
-        if i == 0:
-            continue
-        value = function(value, dynamic_array.data[i])
-    return value
+def reduce(dynamic_array: DynamicArray, func, value):
+    if size(dynamic_array) == 0:
+        return value
+    lst = to_list(dynamic_array)
+    v = lst.pop(0)
+    value = func(value, v)
+    return reduce(from_list(lst), func, value)
 
 
 def iterator(dynamic_array: DynamicArray):
-    return dynamic_array.__iter__()
+    if dynamic_array is None:
+        raise StopIteration
+    lst = dynamic_array
+    len = size(lst)
+    i = 0
+
+    def foo():
+        nonlocal lst
+        nonlocal len
+        nonlocal i
+        if i >= len:
+            raise StopIteration
+        tmp = lst.data[i]
+        i += 1
+        return tmp
+
+    return foo
 
 
 def empty():
@@ -159,9 +191,11 @@ def empty():
 
 
 def concat(instance1: DynamicArray, instance2: DynamicArray):
-    concat_array = DynamicArray()
-    for item in instance1:
-        concat_array.append(item)
-    for item in instance2:
-        concat_array.append(item)
-    return concat_array
+    if size(instance1) == 0:
+        return instance2
+    if size(instance2) == 0:
+        return instance1
+    lst = to_list(instance1)
+    v = lst[len(lst) - 1]
+    new_i2 = cons(v, instance2)
+    return concat(from_list(lst[0 : len(lst) - 1]), new_i2)
