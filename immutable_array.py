@@ -50,8 +50,6 @@ class DynamicArray(object):
         self.capacity = new_capacity
 
     def append(self, value):
-        if value is None:
-            raise ValueError("Input is None")
         if self.length == self.capacity:
             self._resize()
         self.data[self.length] = value
@@ -61,14 +59,14 @@ class DynamicArray(object):
 def cons(value, dynamic_array: DynamicArray):
     cons_array = DynamicArray()
     cons_array.append(value)
+    if dynamic_array is None:
+        return cons_array
     for item in dynamic_array:
         cons_array.append(item)
     return cons_array
 
 
 def remove(dynamic_array: DynamicArray, value):
-    if value is None:
-        return dynamic_array
     if dynamic_array.length == 0:
         return DynamicArray()
     lst = to_list(dynamic_array)
