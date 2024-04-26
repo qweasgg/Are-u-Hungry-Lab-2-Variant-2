@@ -78,7 +78,7 @@ class TestDynamicArray(unittest.TestCase):
 
         dynamic_array = from_list(lst)
         filter_array = filter(dynamic_array, is_even)
-        filter_list = [x for x in lst if x % 2 == 0]
+        filter_list = [x for x in lst if is_even(x)]
         self.assertEqual(to_list(filter_array), filter_list)
 
     @given(strategies.lists(strategies.integers()))
