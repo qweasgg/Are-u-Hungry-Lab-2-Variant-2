@@ -36,9 +36,9 @@ class TestDynamicArray(unittest.TestCase):
     @given(strategies.lists(strategies.integers()))
     def test_reverse(self, lst):
         dynamic_array = from_list(lst)
+        lst.reverse()
         reverse_array = reverse(dynamic_array)
-        array = reverse(reverse_array)
-        self.assertEqual(array, dynamic_array)
+        self.assertEqual(reverse_array, from_list(lst))
 
     @given(
         strategies.lists(strategies.integers()),
