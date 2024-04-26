@@ -67,12 +67,14 @@ def cons(value, dynamic_array: DynamicArray):
 
 
 def remove(dynamic_array: DynamicArray, value):
+    if value is None:
+        return dynamic_array
     if dynamic_array.length == 0:
         return DynamicArray()
     lst = to_list(dynamic_array)
     v = lst.pop(0)
     if v == value:
-        return remove(from_list(lst), value)
+        return from_list(lst)
     return cons(v, remove(from_list(lst), value))
 
 
@@ -95,7 +97,7 @@ def reverse(dynamic_array: DynamicArray):
         return DynamicArray()
     lst = to_list(dynamic_array)
     v = lst[len(lst) - 1]
-    return cons(v, reverse(from_list(lst[0:(len(lst) - 1)])))
+    return cons(v, reverse(from_list(lst[0 : (len(lst) - 1)])))
 
 
 def intersection(instance1: DynamicArray, instance2: DynamicArray):
@@ -115,7 +117,7 @@ def to_list(dynamic_array: DynamicArray):
         if size(array) == 0:
             return res
         v = array.data[0]
-        rest_arr = from_list(array.data[1:size(array)])
+        rest_arr = from_list(array.data[1 : size(array)])
         res.append(v)
         return builder(rest_arr)
 
@@ -198,4 +200,4 @@ def concat(instance1: DynamicArray, instance2: DynamicArray):
     lst = to_list(instance1)
     v = lst[len(lst) - 1]
     new_i2 = cons(v, instance2)
-    return concat(from_list(lst[0:len(lst) - 1]), new_i2)
+    return concat(from_list(lst[0 : len(lst) - 1]), new_i2)
