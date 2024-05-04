@@ -1,28 +1,32 @@
+from typing import Any, List, Callable
+
+
 class DynamicArray(object):
 
-    def __init__(self, initial_capacity=10, growth_factor=2):
+    def __init__(self, initial_capacity: int = 10,
+                 growth_factor: int = 2) -> None:
         self.capacity = initial_capacity
         self.growth_factor = growth_factor
         self.length = 0
         self.data = [None] * initial_capacity
 
-    def __getitem__(self, index):
+    def __getitem__(self, index: Any) -> Any:
         if 0 <= index < self.length:
             return self.data[index]
         else:
             raise IndexError("Index out of range")
 
-    def __setitem__(self, index, value):
+    def __setitem__(self, index: Any, value: Any) -> Any:
         if 0 <= index < self.length:
             self.data[index] = value
         else:
             raise IndexError("Index out of range")
 
-    def __iter__(self):
+    def __iter__(self) -> Any:
         self._index = 0
         return self
 
-    def __next__(self):
+    def __next__(self) -> Any:
         if self._index < self.length:
             value = self.data[self._index]
             self._index += 1
@@ -30,18 +34,20 @@ class DynamicArray(object):
         else:
             raise StopIteration
 
-    def __eq__(self, other):
-        if self.length != other.length:
-            return False
-        for i in range(self.length):
-            if self.data[i] != other.data[i]:
+    def __eq__(self, other: object) -> bool:
+        if type(other) is DynamicArray:
+            if self.length != other.length:
                 return False
-        return True
+            for i in range(self.length):
+                if self.data[i] != other.data[i]:
+                    return False
+            return True
+        return False
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "[" + ", ".join(str(item) for item in self) + "]"
 
-    def _resize(self):
+    def _resize(self) -> None:
         new_capacity = self.capacity * self.growth_factor
         new_data = [None] * new_capacity
         for i in range(self.length):
@@ -49,14 +55,14 @@ class DynamicArray(object):
         self.data = new_data
         self.capacity = new_capacity
 
-    def append(self, value):
+    def append(self, value: Any) -> None:
         if self.length == self.capacity:
             self._resize()
         self.data[self.length] = value
         self.length += 1
 
 
-def cons(value, dynamic_array: DynamicArray):
+def cons(value: Any, dynamic_array: DynamicArray) -> DynamicArray:
     cons_array = DynamicArray()
     cons_array.append(value)
     if dynamic_array is None:
@@ -66,7 +72,7 @@ def cons(value, dynamic_array: DynamicArray):
     return cons_array
 
 
-def remove(dynamic_array: DynamicArray, value):
+def remove(dynamic_array: DynamicArray, value: Any) -> DynamicArray:
     if dynamic_array.length == 0:
         return DynamicArray()
     lst = to_list(dynamic_array)
@@ -76,11 +82,11 @@ def remove(dynamic_array: DynamicArray, value):
     return cons(v, remove(from_list(lst), value))
 
 
-def size(dynamic_array: DynamicArray):
+def size(dynamic_array: DynamicArray) -> int:
     return dynamic_array.length
 
 
-def is_member(dynamic_array: DynamicArray, value):
+def is_member(dynamic_array: DynamicArray, value: Any) -> bool:
     if size(dynamic_array) == 0:
         return False
     lst = to_list(dynamic_array)
@@ -90,7 +96,7 @@ def is_member(dynamic_array: DynamicArray, value):
     return is_member(from_list(lst), value)
 
 
-def reverse(dynamic_array: DynamicArray):
+def reverse(dynamic_array: DynamicArray) -> DynamicArray:
     if size(dynamic_array) == 0:
         return DynamicArray()
     lst = to_list(dynamic_array)
@@ -98,7 +104,7 @@ def reverse(dynamic_array: DynamicArray):
     return cons(v, reverse(from_list(lst[0:(len(lst) - 1)])))
 
 
-def intersection(instance1: DynamicArray, instance2: DynamicArray):
+def intersection(instance1: DynamicArray, instance2: DynamicArray) -> bool:
     if size(instance1) == 0 or size(instance2) == 0:
         return False
     lst = to_list(instance1)
@@ -108,10 +114,10 @@ def intersection(instance1: DynamicArray, instance2: DynamicArray):
     return intersection(from_list(lst), instance2)
 
 
-def to_list(dynamic_array: DynamicArray):
+def to_list(dynamic_array: DynamicArray) -> List[Any]:
     res: list[type] = []
 
-    def builder(array):
+    def builder(array: Any) -> List[Any]:
         if size(array) == 0:
             return res
         v = array.data[0]
@@ -122,13 +128,13 @@ def to_list(dynamic_array: DynamicArray):
     return builder(dynamic_array)
 
 
-def from_list(lst: list):
+def from_list(lst: List[Any]) -> DynamicArray:
     if len(lst) == 0:
         return DynamicArray()
     return cons(lst[0], from_list(lst[1:]))
 
 
-def find(dynamic_array: DynamicArray, predicate):
+def find(dynamic_array: DynamicArray, predicate: Callable[[Any], Any]) -> Any:
     if size(dynamic_array) == 0:
         return None
     lst = to_list(dynamic_array)
@@ -138,7 +144,8 @@ def find(dynamic_array: DynamicArray, predicate):
     return find(from_list(lst), predicate)
 
 
-def filter(dynamic_array: DynamicArray, func):
+def filter(dynamic_array: DynamicArray,
+           func: Callable[[Any], Any]) -> DynamicArray:
     if size(dynamic_array) == 0:
         return DynamicArray()
     lst = to_list(dynamic_array)
@@ -148,7 +155,7 @@ def filter(dynamic_array: DynamicArray, func):
     return filter(from_list(lst), func)
 
 
-def map(dynamic_array: DynamicArray, func):
+def map(dynamic_array: DynamicArray, func: Callable[..., Any]) -> DynamicArray:
     if size(dynamic_array) == 0:
         return DynamicArray()
     lst = to_list(dynamic_array)
@@ -156,7 +163,8 @@ def map(dynamic_array: DynamicArray, func):
     return cons(func(v), map(from_list(lst), func))
 
 
-def reduce(dynamic_array: DynamicArray, func, value):
+def reduce(dynamic_array: DynamicArray,
+           func: Callable[..., Any], value: Any) -> Any:
     if size(dynamic_array) == 0:
         return value
     lst = to_list(dynamic_array)
@@ -165,14 +173,14 @@ def reduce(dynamic_array: DynamicArray, func, value):
     return reduce(from_list(lst), func, value)
 
 
-def iterator(dynamic_array: DynamicArray):
+def iterator(dynamic_array: DynamicArray) -> Any:
     if dynamic_array is None:
         raise StopIteration
     lst = dynamic_array
     len = size(lst)
     i = 0
 
-    def foo():
+    def foo() -> Any:
         nonlocal lst
         nonlocal len
         nonlocal i
@@ -185,12 +193,12 @@ def iterator(dynamic_array: DynamicArray):
     return foo
 
 
-def empty():
+def empty() -> DynamicArray:
     array = DynamicArray()
     return array
 
 
-def concat(instance1: DynamicArray, instance2: DynamicArray):
+def concat(instance1: DynamicArray, instance2: DynamicArray) -> DynamicArray:
     if size(instance1) == 0:
         return instance2
     if size(instance2) == 0:

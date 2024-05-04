@@ -24,6 +24,10 @@
 
 ## Changelog
 
+- 04.05.2024 - 6
+  Add strict for mypy
+  Compare the differences between mut and immut
+
 - 26.04.2024 - 5
   Add test_api in the PBT test
   Modify some implement to receive imput None
@@ -62,3 +66,16 @@
 
 - Our implementation also ensures proper handling of None values.
   When the input is None, the program will prompt an error.
+
+## Comparison
+
+- Using mutable methods allows us to directly modify data structures, providing
+high flexibility and potentially reducing memory overhead. However, mutable data
+structures may lead to code that is difficult to understand and can result in
+race conditions and synchronization issues in multi-threaded environments.
+
+- Using immutable methods prevents direct modification of the original data structure,
+making it inherently thread-safe and simplifying concurrent programming 
+but may have lower efficiency.
+
+- In general, we should choose the appropriate method based on practical considerations. 
