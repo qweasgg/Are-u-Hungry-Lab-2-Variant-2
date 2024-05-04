@@ -70,12 +70,12 @@
 ## Comparison
 
 - Using mutable methods allows us to directly modify data structures, providing
-high flexibility and potentially reducing memory overhead. However, mutable data
-structures may lead to code that is difficult to understand and can result in
-race conditions and synchronization issues in multi-threaded environments.
+  high flexibility and potentially reducing memory overhead. However, mut data
+  structures may lead to code that is difficult to understand and can result in
+  race conditions and synchronization issues in multi-threaded environments.
 
-- Using immutable methods prevents direct modification of the original data structure,
-making it inherently thread-safe and simplifying concurrent programming 
-but may have lower efficiency.
+- Using immut methods prevents direct modification of the original data structure,
+  making it inherently thread-safe and simplifying concurrent programming
+  but may have lower efficiency.
 
-- In general, we should choose the appropriate method based on practical considerations. 
+- So we should choose the appropriate method based on practical considerations.
