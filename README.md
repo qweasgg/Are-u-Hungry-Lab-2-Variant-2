@@ -24,6 +24,9 @@
 
 ## Changelog
 
+- 15.05.2024 - 7
+  Use type variables fo static typing you data structure
+
 - 04.05.2024 - 6
   Add strict for mypy
   Compare the differences between mut and immut
